@@ -5,7 +5,8 @@ import { execFile } from "child_process";
 import { promisify } from "util";
 import { createServer as createViteServer } from "vite";
 import dotenv from "dotenv";
-import { TypeScriptSupportAgent } from "./server/agentEngine.ts";
+import { TypeScriptSupportAgent } from "./server/agentEngine";
+import { KNOWLEDGE_BASE_DATA, METRICS_SUMMARY_DATA, GOLDEN_SET_DATA } from "./server/embeddedData";
 
 dotenv.config();
 
@@ -16,21 +17,7 @@ const PORT = 3000;
 app.use(express.json());
 
 // In-memory TypeScript Support Agent for sub-millisecond local retrieval & Vercel serverless compatibility
-let tsAgent: TypeScriptSupportAgent | null = null;
-function getTsAgent(): TypeScriptSupportAgent | null {
-  if (!tsAgent) {
-    const kbPath = path.join(process.cwd(), "data", "processed", "knowledge_base.json");
-    if (fs.existsSync(kbPath)) {
-      try {
-        const docs = JSON.parse(fs.readFileSync(kbPath, "utf-8"));
-        tsAgent = new TypeScriptSupportAgent(docs);
-      } catch (e) {
-        console.error("Failed to load knowledge base into TypeScript agent:", e);
-      }
-    }
-  }
-  return tsAgent;
-}
+const tsAgent = new TypeScriptSupportAgent(KNOWLEDGE_BASE_DATA);
 
 // API Routes
 app.get("/api/health", (req, res) => {
@@ -61,81 +48,32 @@ app.post("/api/chat", async (req, res) => {
       return res.json(parsed);
     }
   } catch (err: any) {
-    console.warn("Python execution not available or errored. Seamlessly using native TypeScript Agent engine:", err?.message);
+    console.warn("Using native TypeScript Support Agent engine:", err?.message);
   }
 
-  // Fallback to high-speed native TypeScript Agent engine (Vercel Serverless Ready)
+  // High-speed native TypeScript Agent engine (Vercel Serverless Ready)
   try {
-    const agent = getTsAgent();
-    if (agent) {
-      const result = await agent.processQuery(query);
-      return res.json(result);
-    }
-  } catch (tsErr) {
+    const result = await tsAgent.processQuery(query);
+    return res.json(result);
+  } catch (tsErr: any) {
     console.error("TypeScript agent engine error:", tsErr);
+    return res.status(500).json({ error: "Agent execution failed." });
   }
-
-  // Resilient policy fallback
-  const isRefund = /refund|reimburse|money back/i.test(query);
-  return res.json({
-    query: query,
-    cleaned_query: query.trim(),
-    answer: isRefund
-      ? "Based on our policy, you may be eligible for a refund when an item is returned within 30 days of delivery in original packaging or when an order is cancelled prior to shipment. Once approved or received, refunds are processed back to your original payment method within 5 to 7 business days. Expedited processing is not available."
-      : "I don't have information about that in the available customer-support knowledge base. I can assist with customer service topics such as orders, returns, refunds, billing, and account management.",
-    status: isRefund ? "grounded_response" : "abstain_out_of_domain",
-    confidence_level: isRefund ? "MEDIUM" : "LOW",
-    confidence_score: isRefund ? 0.35 : 0.1,
-    predicted_intent: isRefund ? "refund_request" : "general_inquiry",
-    retrieved_documents: [],
-    grounded: true,
-    abstention: !isRefund,
-    execution_time_ms: 1.2,
-    ticket_triage: {
-      sentiment: "Neutral",
-      urgency: isRefund ? "P2 - High" : "P4 - Low",
-      suggested_action: isRefund ? "Auto-Resolved via RAG" : "Escalate to Human Agent",
-      agent_summary: "Customer support inquiry handled via verified policy.",
-      draft_agent_reply: "Hi there,\n\nThank you for reaching out. Please let us know if you need any further assistance!"
-    },
-    baseline_comparison: {
-      intent: isRefund ? "refund_request" : "general_inquiry",
-      similarity: 0.25,
-      response: "Processed via grounded fallback engine.",
-      matched_via: "Direct Policy Fallback",
-      verdict: "RAG Outperforms"
-    }
-  });
 });
 
 // Metrics summary
 app.get("/api/metrics", (req, res) => {
-  const metricsPath = path.join(process.cwd(), "reports", "metrics_summary.json");
-  if (fs.existsSync(metricsPath)) {
-    const data = fs.readFileSync(metricsPath, "utf-8");
-    return res.json(JSON.parse(data));
-  }
-  return res.status(404).json({ error: "Metrics summary not found. Run evaluate.py first." });
+  return res.json(METRICS_SUMMARY_DATA);
 });
 
 // Knowledge base
 app.get("/api/knowledge-base", (req, res) => {
-  const kbPath = path.join(process.cwd(), "data", "processed", "knowledge_base.json");
-  if (fs.existsSync(kbPath)) {
-    const data = fs.readFileSync(kbPath, "utf-8");
-    return res.json(JSON.parse(data));
-  }
-  return res.status(404).json({ error: "Knowledge base not found." });
+  return res.json(KNOWLEDGE_BASE_DATA);
 });
 
 // Golden set
 app.get("/api/golden-set", (req, res) => {
-  const gsPath = path.join(process.cwd(), "data", "golden_set", "golden_set.json");
-  if (fs.existsSync(gsPath)) {
-    const data = fs.readFileSync(gsPath, "utf-8");
-    return res.json(JSON.parse(data));
-  }
-  return res.status(404).json({ error: "Golden set not found." });
+  return res.json(GOLDEN_SET_DATA);
 });
 
 // Evaluation Report (Markdown)

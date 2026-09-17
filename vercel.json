@@ -1,19 +1,9 @@
 {
-  "version": 2,
   "buildCommand": "vite build",
   "outputDirectory": "dist",
-  "functions": {
-    "api/index.ts": {
-      "includeFiles": "data/**,reports/**"
-    }
-  },
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api"
-    },
-    {
-      "source": "/(.*)",
+      "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
   ]
