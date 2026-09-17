@@ -1,0 +1,125 @@
+{
+  "raw_analysis": {
+    "total_records": 189,
+    "columns": [
+      "ticket_id",
+      "customer_query",
+      "intent",
+      "category",
+      "policy_reference",
+      "resolution_steps",
+      "sentiment",
+      "urgency"
+    ],
+    "missing_values": {
+      "ticket_id": 0,
+      "customer_query": 2,
+      "intent": 0,
+      "category": 0,
+      "policy_reference": 0,
+      "resolution_steps": 0,
+      "sentiment": 0,
+      "urgency": 0
+    },
+    "unique_intents_count": 10,
+    "intent_distribution": {
+      "order_tracking": 23,
+      "refund_request": 20,
+      "return_exchange": 21,
+      "password_reset": 20,
+      "account_access": 21,
+      "billing_inquiry": 21,
+      "subscription_cancellation": 21,
+      "shipping_delay": 15,
+      "technical_support": 15,
+      "product_inquiry": 12
+    },
+    "category_distribution": {
+      "Orders & Shipping": 38,
+      "Billing & Refunds": 20,
+      "Returns & Replacements": 21,
+      "Account Security": 20,
+      "Account Management": 21,
+      "Billing & Payments": 21,
+      "Subscriptions": 21,
+      "Technical Issues": 15,
+      "Products & Specifications": 12
+    },
+    "empty_queries_count": 2,
+    "empty_queries": [
+      {
+        "row": 184,
+        "ticket_id": "TICK-NOISE-004"
+      },
+      {
+        "row": 185,
+        "ticket_id": "TICK-NOISE-005"
+      }
+    ],
+    "short_ambiguous_count": 2,
+    "short_ambiguous_queries": [
+      {
+        "ticket_id": "TICK-NOISE-001",
+        "query": "help",
+        "intent": "account_access"
+      },
+      {
+        "ticket_id": "TICK-NOISE-003",
+        "query": "Cancel",
+        "intent": "subscription_cancellation"
+      }
+    ],
+    "exact_duplicates": [
+      {
+        "original_id": "TICK-1001",
+        "duplicate_id": "TICK-NOISE-007",
+        "query": "Where is my order right now?",
+        "normalized": "where is my order right now"
+      },
+      {
+        "original_id": "TICK-1001",
+        "duplicate_id": "TICK-NOISE-008",
+        "query": "where is my order right now???",
+        "normalized": "where is my order right now"
+      }
+    ],
+    "near_duplicates": []
+  },
+  "clean_total_count": 185,
+  "dropped_empty_count": 2,
+  "dropped_duplicate_count": 2,
+  "train_count": 148,
+  "test_count": 37,
+  "train_intent_distribution": {
+    "password_reset": 16,
+    "account_access": 17,
+    "billing_inquiry": 16,
+    "return_exchange": 17,
+    "order_tracking": 16,
+    "refund_request": 16,
+    "shipping_delay": 12,
+    "product_inquiry": 9,
+    "technical_support": 12,
+    "subscription_cancellation": 17
+  },
+  "test_intent_distribution": {
+    "product_inquiry": 3,
+    "return_exchange": 4,
+    "technical_support": 3,
+    "order_tracking": 4,
+    "billing_inquiry": 4,
+    "refund_request": 4,
+    "password_reset": 4,
+    "subscription_cancellation": 4,
+    "account_access": 4,
+    "shipping_delay": 3
+  },
+  "kb_articles_count": 10,
+  "leakage_audit": {
+    "has_leakage": false,
+    "exact_leak_count": 0,
+    "exact_leaks": [],
+    "near_leak_count": 0,
+    "near_leaks": []
+  }
+}

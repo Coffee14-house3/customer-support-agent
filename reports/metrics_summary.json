@@ -1,0 +1,347 @@
+{
+  "baseline_test_metrics": {
+    "model": "TF-IDF + Logistic Regression Baseline",
+    "test_sample_count": 37,
+    "accuracy": 0.6757,
+    "macro_f1": 0.6122,
+    "recall_at_1": 0.6486,
+    "recall_at_3": 0.9459,
+    "mrr": 0.7838,
+    "per_class_report": {
+      "account_access": {
+        "precision": 0.5,
+        "recall": 0.75,
+        "f1-score": 0.6,
+        "support": 4
+      },
+      "billing_inquiry": {
+        "precision": 0.5714285714285714,
+        "recall": 1.0,
+        "f1-score": 0.7272727272727273,
+        "support": 4
+      },
+      "order_tracking": {
+        "precision": 0.5,
+        "recall": 0.75,
+        "f1-score": 0.6,
+        "support": 4
+      },
+      "password_reset": {
+        "precision": 0.8,
+        "recall": 1.0,
+        "f1-score": 0.888888888888889,
+        "support": 4
+      },
+      "product_inquiry": {
+        "precision": 1.0,
+        "recall": 0.3333333333333333,
+        "f1-score": 0.5,
+        "support": 3
+      },
+      "refund_request": {
+        "precision": 0.8,
+        "recall": 1.0,
+        "f1-score": 0.888888888888889,
+        "support": 4
+      },
+      "return_exchange": {
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1-score": 0.75,
+        "support": 4
+      },
+      "shipping_delay": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 3
+      },
+      "subscription_cancellation": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1-score": 0.6666666666666666,
+        "support": 4
+      },
+      "technical_support": {
+        "precision": 1.0,
+        "recall": 0.3333333333333333,
+        "f1-score": 0.5,
+        "support": 3
+      },
+      "accuracy": 0.6756756756756757,
+      "macro avg": {
+        "precision": 0.6921428571428571,
+        "recall": 0.6416666666666666,
+        "f1-score": 0.6121717171717171,
+        "support": 37
+      },
+      "weighted avg": {
+        "precision": 0.6942084942084942,
+        "recall": 0.6756756756756757,
+        "f1-score": 0.6347802347802347,
+        "support": 37
+      }
+    }
+  },
+  "agent_test_metrics": {
+    "model": "AI Support Agent (RAG + Grounding)",
+    "test_sample_count": 37,
+    "accuracy": 0.7027,
+    "macro_f1": 0.6702,
+    "recall_at_1": 0.7297,
+    "recall_at_3": 0.973,
+    "mrr": 0.8333
+  },
+  "golden_set_reliability": 1.0,
+  "category_breakdown": {
+    "Standard": {
+      "total": 8,
+      "success": 8,
+      "failures": [],
+      "success_rate": 1.0
+    },
+    "Paraphrase": {
+      "total": 6,
+      "success": 6,
+      "failures": [],
+      "success_rate": 1.0
+    },
+    "Ambiguous": {
+      "total": 5,
+      "success": 5,
+      "failures": [],
+      "success_rate": 1.0
+    },
+    "Typo_Informal": {
+      "total": 5,
+      "success": 5,
+      "failures": [],
+      "success_rate": 1.0
+    },
+    "Difficult": {
+      "total": 5,
+      "success": 5,
+      "failures": [],
+      "success_rate": 1.0
+    },
+    "Adversarial": {
+      "total": 5,
+      "success": 5,
+      "failures": [],
+      "success_rate": 1.0
+    },
+    "OutOfDomain": {
+      "total": 5,
+      "success": 5,
+      "failures": [],
+      "success_rate": 1.0
+    },
+    "Unsupported": {
+      "total": 5,
+      "success": 5,
+      "failures": [],
+      "success_rate": 1.0
+    }
+  },
+  "llm_judge_summary": {
+    "correctness": 4.84,
+    "relevance": 4.34,
+    "groundedness": 4.91,
+    "completeness": 4.84,
+    "helpfulness": 4.34,
+    "overall_score": 4.84,
+    "hallucination_rate": 0.0
+  },
+  "sample_evaluations": [
+    {
+      "id": "GS-STD-001",
+      "category": "Standard",
+      "query": "What is the procedure to check where my package is?",
+      "acceptable_behavior": "answer",
+      "agent_status": "grounded_response",
+      "agent_answer": "Orders can be tracked via the tracking link sent in the confirmation email or under Account > Order History. Standard domestic shipping takes 3-5 business days. Advise customer to check their confirmation email for the courier tracking number, or log into Account > Orders to view real-time transit status.",
+      "success": true,
+      "judge_eval": {
+        "correctness": 5,
+        "relevance": 4,
+        "groundedness": 5,
+        "completeness": 5,
+        "helpfulness": 4,
+        "hallucination": false,
+        "overall_score": 5,
+        "reason": "Addressed query with 2/2 key facts matched."
+      }
+    },
+    {
+      "id": "GS-STD-002",
+      "category": "Standard",
+      "query": "How many days do I have to return an unwanted item?",
+      "acceptable_behavior": "answer",
+      "agent_status": "grounded_response",
+      "agent_answer": "Items can be returned or exchanged within 30 days of delivery in original packaging. Return shipping is free with our prepaid printable label. Generate a prepaid return shipping label, guide customer to attach it to the original package, and bring it to any authorized postal drop-off location within 30 days.",
+      "success": true,
+      "judge_eval": {
+        "correctness": 5,
+        "relevance": 4,
+        "groundedness": 5,
+        "completeness": 5,
+        "helpfulness": 4,
+        "hallucination": false,
+        "overall_score": 5,
+        "reason": "Addressed query with 3/3 key facts matched."
+      }
+    },
+    {
+      "id": "GS-STD-003",
+      "category": "Standard",
+      "query": "How long does it take for a refund to show up on my card?",
+      "acceptable_behavior": "answer",
+      "agent_status": "grounded_response",
+      "agent_answer": "Refunds are processed within 5-7 business days back to the original payment method after an item is returned or order cancelled. Expedited processing is not available. Verify the order status, initiate the refund request in the billing system, and inform the customer it takes 5-7 business days to reflect on their bank statement.",
+      "success": true,
+      "judge_eval": {
+        "correctness": 5,
+        "relevance": 4,
+        "groundedness": 5,
+        "completeness": 5,
+        "helpfulness": 4,
+        "hallucination": false,
+        "overall_score": 5,
+        "reason": "Addressed query with 2/2 key facts matched."
+      }
+    },
+    {
+      "id": "GS-STD-004",
+      "category": "Standard",
+      "query": "Where do I go to change or reset my forgotten password?",
+      "acceptable_behavior": "answer",
+      "agent_status": "grounded_response",
+      "agent_answer": "Passwords can be reset using the 'Forgot Password' link on the sign-in screen. A reset link valid for 1 hour will be emailed to the registered address. Direct customer to click 'Forgot Password' on the login screen, enter their registered email, and use the security link within 60 minutes to create a new password.",
+      "success": true,
+      "judge_eval": {
+        "correctness": 5,
+        "relevance": 4,
+        "groundedness": 5,
+        "completeness": 5,
+        "helpfulness": 4,
+        "hallucination": false,
+        "overall_score": 5,
+        "reason": "Addressed query with 2/2 key facts matched."
+      }
+    },
+    {
+      "id": "GS-STD-005",
+      "category": "Standard",
+      "query": "What payment methods are supported on checkout?",
+      "acceptable_behavior": "answer",
+      "agent_status": "grounded_response",
+      "agent_answer": "Accepted payment methods include Visa, MasterCard, American Express, PayPal, and Apple Pay. Invoices are accessible anytime under Account > Billing. Guide the customer to Account > Billing to download PDF tax receipts and review itemized invoice breakdowns.",
+      "success": true,
+      "judge_eval": {
+        "correctness": 5,
+        "relevance": 4,
+        "groundedness": 5,
+        "completeness": 5,
+        "helpfulness": 4,
+        "hallucination": false,
+        "overall_score": 5,
+        "reason": "Addressed query with 2/2 key facts matched."
+      }
+    },
+    {
+      "id": "GS-STD-006",
+      "category": "Standard",
+      "query": "If I cancel my recurring subscription today, will it stop working right away?",
+      "acceptable_behavior": "answer",
+      "agent_status": "grounded_response",
+      "agent_answer": "Subscriptions can be cancelled anytime under Account > Subscriptions. Benefits remain active until the end of the current paid billing cycle with no cancellation penalties. Instruct customer to navigate to Account > Subscriptions > Manage Subscription > Cancel Subscription, confirming access continues until cycle ends.",
+      "success": true,
+      "judge_eval": {
+        "correctness": 5,
+        "relevance": 4,
+        "groundedness": 5,
+        "completeness": 5,
+        "helpfulness": 4,
+        "hallucination": false,
+        "overall_score": 5,
+        "reason": "Addressed query with 2/2 key facts matched."
+      }
+    },
+    {
+      "id": "GS-STD-007",
+      "category": "Standard",
+      "query": "What should I do if the website gives an error 500 when saving?",
+      "acceptable_behavior": "answer",
+      "agent_status": "grounded_response",
+      "agent_answer": "Clear browser cache and cookies, disable ad-blockers, or try an incognito window if experiencing web portal errors. We support Chrome, Safari, Firefox, and Edge. Provide standard troubleshooting steps: hard refresh (Ctrl+F5), clear cookies/cache, try alternate browser, or check service status dashboard.",
+      "success": true,
+      "judge_eval": {
+        "correctness": 5,
+        "relevance": 4,
+        "groundedness": 5,
+        "completeness": 5,
+        "helpfulness": 4,
+        "hallucination": false,
+        "overall_score": 5,
+        "reason": "Addressed query with 2/2 key facts matched."
+      }
+    },
+    {
+      "id": "GS-STD-008",
+      "category": "Standard",
+      "query": "How long is the manufacturer warranty on hardware items?",
+      "acceptable_behavior": "answer",
+      "agent_status": "grounded_response",
+      "agent_answer": "All hardware devices include a 1-year limited warranty against manufacturer defects. Product user manuals and compatibility matrices are available in the Help Center. Consult the official product specifications, confirm compatibility requirements, and refer customer to user manual documentation.",
+      "success": true,
+      "judge_eval": {
+        "correctness": 5,
+        "relevance": 4,
+        "groundedness": 5,
+        "completeness": 5,
+        "helpfulness": 4,
+        "hallucination": false,
+        "overall_score": 5,
+        "reason": "Addressed query with 1/1 key facts matched."
+      }
+    },
+    {
+      "id": "GS-PARA-001",
+      "category": "Paraphrase",
+      "query": "Where is the parcel containing my goodies travelling at this moment?",
+      "acceptable_behavior": "answer",
+      "agent_status": "grounded_response",
+      "agent_answer": "Orders can be tracked via the tracking link sent in the confirmation email or under Account > Order History. Standard domestic shipping takes 3-5 business days. Advise customer to check their confirmation email for the courier tracking number, or log into Account > Orders to view real-time transit status.",
+      "success": true,
+      "judge_eval": {
+        "correctness": 5,
+        "relevance": 4,
+        "groundedness": 5,
+        "completeness": 5,
+        "helpfulness": 4,
+        "hallucination": false,
+        "overall_score": 5,
+        "reason": "Addressed query with 2/2 key facts matched."
+      }
+    },
+    {
+      "id": "GS-PARA-002",
+      "category": "Paraphrase",
+      "query": "I want to send this sweater back and get a bigger one instead.",
+      "acceptable_behavior": "answer",
+      "agent_status": "grounded_response",
+      "agent_answer": "Items can be returned or exchanged within 30 days of delivery in original packaging. Return shipping is free with our prepaid printable label. Generate a prepaid return shipping label, guide customer to attach it to the original package, and bring it to any authorized postal drop-off location within 30 days.",
+      "success": true,
+      "judge_eval": {
+        "correctness": 5,
+        "relevance": 4,
+        "groundedness": 5,
+        "completeness": 5,
+        "helpfulness": 4,
+        "hallucination": false,
+        "overall_score": 5,
+        "reason": "Addressed query with 2/2 key facts matched."
+      }
+    }
+  ]
+}

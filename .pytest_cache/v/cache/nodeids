@@ -1,0 +1,19 @@
+[
+  "tests/test_agent.py::test_agent_abstains_on_out_of_domain_query",
+  "tests/test_agent.py::test_agent_abstains_on_unsupported_bitcoin",
+  "tests/test_agent.py::test_agent_answers_normal_standard_query",
+  "tests/test_agent.py::test_agent_clarifies_ambiguous_cancel",
+  "tests/test_agent.py::test_agent_handles_empty_and_whitespace_input",
+  "tests/test_agent.py::test_agent_handles_paraphrased_query",
+  "tests/test_agent.py::test_agent_handles_typo_query",
+  "tests/test_agent.py::test_agent_operates_gracefully_without_api_key",
+  "tests/test_agent.py::test_agent_rejects_adversarial_prompt_injection",
+  "tests/test_agent.py::test_retriever_returns_relevant_knowledge",
+  "tests/test_pipeline.py::test_clean_text_normalizes_whitespace",
+  "tests/test_pipeline.py::test_compute_jaccard_similarity",
+  "tests/test_pipeline.py::test_is_valid_query_filters_empty",
+  "tests/test_pipeline.py::test_leakage_detector_identifies_exact_match",
+  "tests/test_pipeline.py::test_normalize_query_semantics_fixes_typos",
+  "tests/test_pipeline.py::test_processed_split_has_zero_leakage",
+  "tests/test_pipeline.py::test_raw_dataset_exists_and_has_required_schema"
+]

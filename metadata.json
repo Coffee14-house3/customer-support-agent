@@ -1,0 +1,6 @@
+{
+  "name": "Customer Support AI Agent",
+  "description": "Production-grade AI Customer Support Agent with lightweight RAG, intent classification, hallucination guards, Golden Set evaluation, and interactive demo workbench.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
