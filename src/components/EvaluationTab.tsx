@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { CheckCircle, XCircle, AlertCircle, Award, Target, ShieldCheck, Zap, Filter, Search } from "lucide-react";
 import { MetricsSummary, GoldenSetCase } from "../types";
+import { METRICS_SUMMARY_DATA, GOLDEN_SET_DATA } from "../../server/embeddedData";
 
 export const EvaluationTab: React.FC = () => {
-  const [metrics, setMetrics] = useState<MetricsSummary | null>(null);
-  const [goldenSet, setGoldenSet] = useState<GoldenSetCase[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [metrics, setMetrics] = useState<MetricsSummary | null>(METRICS_SUMMARY_DATA as any);
+  const [goldenSet, setGoldenSet] = useState<GoldenSetCase[]>(GOLDEN_SET_DATA as any);
+  const [loading, setLoading] = useState(false);
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -15,11 +16,10 @@ export const EvaluationTab: React.FC = () => {
       fetch("/api/golden-set").then((r) => (r.ok ? r.json() : [])),
     ])
       .then(([metricsData, goldenData]) => {
-        setMetrics(metricsData);
-        setGoldenSet(Array.isArray(goldenData) ? goldenData : []);
+        if (metricsData) setMetrics(metricsData);
+        if (Array.isArray(goldenData) && goldenData.length > 0) setGoldenSet(goldenData);
       })
-      .catch((err) => console.error("Error loading eval data:", err))
-      .finally(() => setLoading(false));
+      .catch((err) => console.error("Error loading eval data:", err));
   }, []);
 
   if (loading) {

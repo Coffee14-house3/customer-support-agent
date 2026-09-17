@@ -338,8 +338,17 @@ export class TypeScriptSupportAgent {
       }
     }
 
-    // Step 6: Grounded Synthesis
-    const answer = this.synthesizeAnswer(cleaned, topDoc);
+    // Step 6: Grounded Synthesis with live LLM (Groq / OpenRouter) or deterministic policy fallback
+    let answer: string | null = null;
+    if (topDoc) {
+      const retrievedContext = retrievedDocs
+        .map((d) => `Document: ${d.title}\nCategory: ${d.category}\nPolicy Summary: ${d.policy_summary}\nResolution Procedure: ${d.resolution_procedure}`)
+        .join("\n\n");
+      answer = await this.callLlm(cleaned, retrievedContext);
+    }
+    if (!answer) {
+      answer = this.synthesizeAnswer(cleaned, topDoc);
+    }
     const confidenceLevel = topScore >= 0.40 ? "HIGH" : "MEDIUM";
 
     return this.finalizeResponse({
@@ -354,6 +363,102 @@ export class TypeScriptSupportAgent {
       grounded: true,
       abstention: false
     }, startTime);
+  }
+
+  private async callLlm(query: string, retrievedContext: string): Promise<string | null> {
+    const groqKey = process.env.GROQ_API_KEY;
+    const openrouterKey = process.env.OPENROUTER_API_KEY;
+
+    // 1. Try Groq (Ultra-fast LLaMA 3.3 70B inference)
+    if (groqKey) {
+      try {
+        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${groqKey}`,
+            "Content-Type": "application/json",
+            "User-Agent": "CustomerSupportAgent/1.0",
+          },
+          body: JSON.stringify({
+            model: "llama-3.3-70b-versatile",
+            messages: [
+              {
+                role: "system",
+                content: `You are a professional, helpful AI Customer Support Agent.
+Your core directive is strictly grounded truthfulness:
+1. Answer ONLY using the facts present in the provided "Relevant Support Knowledge".
+2. NEVER invent policies, fees, refund windows, timeframes, or URLs not stated in the knowledge base.
+3. If the retrieved context does not contain enough information, state what you can assist with.
+4. Address the customer directly in a courteous, professional tone ("you / your").
+5. When the customer asks about scenarios or eligibility (such as refund scenarios), clearly enumerate the qualifying conditions supported by the knowledge base.
+6. NEVER repeat internal back-office staff instructions (e.g., "Verify the order status", "Initiate the refund request in the billing system") to the customer. Instead, explain what the customer needs to do or what they can expect.
+7. Do not include chain of thought or internal reasoning.`
+              },
+              {
+                role: "user",
+                content: `### Customer Question:\n${query}\n\n### Relevant Support Knowledge:\n${retrievedContext}\n\nProvide a clear, helpful, grounded response addressing the customer's question based solely on the relevant support knowledge above.`
+              }
+            ],
+            temperature: 0.1,
+            max_tokens: 500
+          })
+        });
+
+        if (response.ok) {
+          const data: any = await response.json();
+          let text = data?.choices?.[0]?.message?.content?.trim();
+          if (text) {
+            text = text.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
+            return text;
+          }
+        }
+      } catch (err) {
+        console.warn("Groq API inference skipped or failed:", err);
+      }
+    }
+
+    // 2. Try OpenRouter as fallback
+    if (openrouterKey) {
+      try {
+        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${openrouterKey}`,
+            "Content-Type": "application/json",
+            "HTTP-Referer": "https://vercel.com",
+            "X-Title": "Customer Support Agent"
+          },
+          body: JSON.stringify({
+            model: "meta-llama/llama-3.1-8b-instruct",
+            messages: [
+              {
+                role: "system",
+                content: "You are a professional AI Customer Support Agent. Answer ONLY using the facts present in the provided context."
+              },
+              {
+                role: "user",
+                content: `### Customer Question:\n${query}\n\n### Relevant Support Knowledge:\n${retrievedContext}`
+              }
+            ],
+            temperature: 0.1,
+            max_tokens: 500
+          })
+        });
+
+        if (response.ok) {
+          const data: any = await response.json();
+          let text = data?.choices?.[0]?.message?.content?.trim();
+          if (text) {
+            text = text.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
+            return text;
+          }
+        }
+      } catch (err) {
+        console.warn("OpenRouter API inference skipped or failed:", err);
+      }
+    }
+
+    return null;
   }
 
   private synthesizeAnswer(query: string, topDoc?: RetrievedDoc): string {

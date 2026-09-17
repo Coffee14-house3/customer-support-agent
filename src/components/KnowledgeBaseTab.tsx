@@ -1,28 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { BookOpen, Search, Tag, CheckCircle2, ChevronDown, ChevronRight } from "lucide-react";
 import { RetrievedDocument } from "../types";
+import { KNOWLEDGE_BASE_DATA } from "../../server/embeddedData";
 
 export const KnowledgeBaseTab: React.FC = () => {
-  const [kbDocs, setKbDocs] = useState<RetrievedDocument[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [kbDocs, setKbDocs] = useState<RetrievedDocument[]>(KNOWLEDGE_BASE_DATA as any);
+  const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(KNOWLEDGE_BASE_DATA?.[0]?.kb_id || null);
 
   useEffect(() => {
     fetch("/api/knowledge-base")
       .then((r) => (r.ok ? r.json() : []))
       .then((data) => {
-        const docs = Array.isArray(data) ? data : [];
-        setKbDocs(docs);
-        if (docs.length > 0) {
-          setExpandedId(docs[0].kb_id);
+        if (Array.isArray(data) && data.length > 0) {
+          setKbDocs(data);
         }
       })
-      .catch((err) => {
-        console.error("Failed to load KB:", err);
-        setKbDocs([]);
-      })
-      .finally(() => setLoading(false));
+      .catch((err) => console.error("Failed to fetch fresh KB:", err));
   }, []);
 
   const filteredDocs = (Array.isArray(kbDocs) ? kbDocs : []).filter((d) => {

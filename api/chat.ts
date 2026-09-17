@@ -1,5 +1,5 @@
-import { TypeScriptSupportAgent } from "../server/agentEngine";
-import { KNOWLEDGE_BASE_DATA } from "../server/embeddedData";
+import { TypeScriptSupportAgent } from "../server/agentEngine.ts";
+import { KNOWLEDGE_BASE_DATA } from "../server/embeddedData.ts";
 
 let agent: TypeScriptSupportAgent | null = null;
 function getAgent(): TypeScriptSupportAgent {

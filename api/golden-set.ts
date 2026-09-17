@@ -1,4 +1,4 @@
-import { GOLDEN_SET_DATA } from "../server/embeddedData";
+import { GOLDEN_SET_DATA } from "../server/embeddedData.ts";
 
 export default function handler(req: any, res: any) {
   res.setHeader("Content-Type", "application/json");
